@@ -9,12 +9,20 @@ export default function PrikazTroskova(props) {
 
     async function prikazivanje() {
 
-        const { data, error } = await supabase
+        let { data, error } = await supabase
             .from('Troskovi')
             .select('*')
         if (error) {
             alert("Dogodila se greška, pokušajte ponovo :(")
         } else {
+            for (let i = 0; i < data.length; i++) {
+                let { data: data2, error2 } = await supabase
+                    .from('Vrste_troskova')
+                    .select('*')
+                    .eq('id', data[i].vrsta_troska);
+                data[i].vrsta_troska = data2[0].ime
+                data[i].boja = data2[0].boja
+            }
             setTroskovi(data)
         }
 
@@ -64,16 +72,18 @@ export default function PrikazTroskova(props) {
                     <table class="table text-center">
                         <thead>
                             <tr>
+                                <th>Vrsta</th>
                                 <th>Trošak</th>
                                 <th>Datum Troška</th>
                                 <th>Datum Unosa</th>
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody >
+                        <tbody>
                             <For each={troskovi()}>
                                 {(item) =>
-                                    <tr>
+                                    <tr class="justify-center items-center bg-center">
+                                        <td style={`background-color: ${item.boja}; border: 1px solid black; border-radius: 20px; overflow: hidden; display: flex; max-width: 50%; align-items: center; justify-content: center; background-position: center`}>{item.vrsta_troska}</td>
                                         <td>{item.kolicina} {valuta}</td>
                                         <td>{new Date(item.datum_troska).toLocaleDateString()}</td>
                                         <td>{new Date(item.created_at).toLocaleDateString()}</td>

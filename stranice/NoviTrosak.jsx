@@ -4,6 +4,16 @@ import { valuta } from "../src/App";
 
 const [vrste, setVrste] = createSignal([])
 const [newTypeVisible, setNewTypeVisible] = createSignal(false)
+const [currentFormData, setCurrentFormData] = createSignal({
+    kolicina: "",
+    datum: "",
+    opis: "",
+    vrsta: "Vrsta troška"
+})
+
+async function handleFormData(polje, event) {
+    await setCurrentFormData((old) => ({...old, [polje]: event.target.value}))
+}
 
 async function formSubmitTrosak(event) {
     event.preventDefault();
@@ -25,6 +35,8 @@ async function formSubmitTrosak(event) {
 
     if (!data[0]){
         vrsta_troska = 1
+    }else{
+        vrsta_troska = data[0].id
     }
 
     const { error } = await supabase
@@ -37,6 +49,12 @@ async function formSubmitTrosak(event) {
         })
     if (!error) {
         event.target.reset()
+        setCurrentFormData({
+            kolicina: "",
+            datum: "",
+            opis: "",
+            vrsta: "Vrsta troška"
+        })
     } else {
         alert("Spremanje nije uspijelo :(")
     }
@@ -57,6 +75,7 @@ async function formSubmitVrsta(event) {
         .select()
     if (!error) {
         event.target.reset()
+        await setCurrentFormData((old) => ({...old, vrsta: ime}))
         await ucitajVrste()
         toggleNewTypeVisible()
     } else {
@@ -77,9 +96,8 @@ async function ucitajVrste() {
     }
 }
 
-function toggleNewTypeVisible() {
+function toggleNewTypeVisible(event) {
     setNewTypeVisible(old => !old)
-
 }
 
 createEffect(async () => {
@@ -92,11 +110,11 @@ export default function NoviTrosak(props) {
             <Show when={!newTypeVisible()}>
                 <div class="text-3xl text-center mt-10">Upisivanje Troška</div>
                 <form onSubmit={formSubmitTrosak} class="flex flex-col navbar-center mt-10">
-                    <input type="number" step="0.01" name="kolicina" placeholder={"Unesite trošak u: " + valuta()} class="input input-bordered w-full max-w-xs m-2" required="" />
-                    <input type="date" name="datum_troska" class="input input-bordered w-full max-w-xs m-2" required="" />
-                    <textarea name="opis_troska" placeholder="Opis troška..." class="input input-bordered w-full max-w-xs m-2 h-16"></textarea>
-                    <select class="select select-bordered w-full max-w-xs" name="vrsta_troska">
-                        <option disabled selected>Vrsta troška</option>
+                    <input type="number" step="0.01" name="kolicina" placeholder={"Unesite trošak u: " + valuta()} class="input input-bordered w-full max-w-xs m-2" required="" oninput={() => {handleFormData("kolicina", event)}} value={currentFormData().kolicina}/>
+                    <input type="date" name="datum_troska" class="input input-bordered w-full max-w-xs m-2" required="" oninput={() => {handleFormData("datum", event)}} value={currentFormData().datum}/>
+                    <textarea name="opis_troska" placeholder="Opis troška..." class="input input-bordered w-full max-w-xs m-2 h-16" oninput={() => {handleFormData("opis", event)}} value={currentFormData().opis}></textarea>
+                    <select class="select select-bordered w-full max-w-xs" name="vrsta_troska" oninput={() => {handleFormData("vrsta", event)}} value={currentFormData().vrsta}>
+                    <option disabled selected>Vrsta troška</option>
                         <For each={vrste()}>
                             {(item) => <option>{item.ime} </option>}
                         </For>

@@ -5,6 +5,7 @@ import NoviTrosak from '../stranice/NoviTrosak';
 import PrikazTroskova from '../stranice/PrikazTroskova';
 import { createSignal } from 'solid-js';
 import Grafikon from '../stranice/Grafikon';
+import UpravljanjeVrstama from '../stranice/UpravljanjeVrstama';
 
 export const [valuta, setValuta] = createSignal("EUR")
 
@@ -14,6 +15,7 @@ function App() {
       <Route path="/" component={NoviTrosak} />
       <Route path="/prikaz" component={PrikazTroskova} />
       <Route path="/grafikon" component={Grafikon} />
+      <Route path="/vrste" component={UpravljanjeVrstama}/>
     </Router>
   );
 }
@@ -33,6 +35,7 @@ export function Root(props) {
               <li><A href='/'>Novi Trosak</A></li>
               <li><A href='/prikaz'>Prikaz Troskova</A></li>
               <li><A href='/grafikon'>Tortni Grafikon</A></li>
+              <li><A href='/vrste'>Upravljanje Vrstama</A></li>
             </ul>
           </div>
         </div>
