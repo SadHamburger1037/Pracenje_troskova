@@ -1,6 +1,5 @@
 import { createEffect, createSignal } from "solid-js"
 import { supabase } from "../servisi/supabase"
-import { formSubmitVrsta } from "./NoviTrosak"
 
 export default function UpravljanjeVrstama(props) {
 
