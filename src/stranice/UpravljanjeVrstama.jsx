@@ -90,8 +90,8 @@ export default function UpravljanjeVrstama(props) {
                         <tbody>
                             <For each={vrste()}>
                                 {(item) =>
-                                    <tr class="justify-center items-center bg-center">
-                                        <td style={`background-color: ${item.boja}; border: 1px solid black; border-radius: 20px; overflow: hidden; display: flex; max-width: 50%; align-items: center; justify-content: center; background-position: center`}>{item.ime}</td>
+                                    <tr>
+                                        <td style={`background-color: ${item.boja}`} class="p-2 rounded-2xl flex justify-center max-w-40">{item.ime}</td>
                                         <td><button class="btn btn-outline btn-error" onclick={() => { brisanjeVrste(item.id) }}>Briši</button></td>
                                     </tr>
                                 }

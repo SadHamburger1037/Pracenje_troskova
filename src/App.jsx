@@ -1,11 +1,9 @@
-import logo from './logo.svg';
-import styles from './App.module.css';
 import { Router, Route, A } from "@solidjs/router";
-import NoviTrosak from '../stranice/NoviTrosak';
-import PrikazTroskova from '../stranice/PrikazTroskova';
+import NoviTrosak from './stranice/NoviTrosak';
+import PrikazTroskova from './stranice/PrikazTroskova';
 import { createSignal } from 'solid-js';
-import Grafikon from '../stranice/Grafikon';
-import UpravljanjeVrstama from '../stranice/UpravljanjeVrstama';
+import Grafikon from "./stranice/Grafikon"
+import UpravljanjeVrstama from './stranice/UpravljanjeVrstama';
 
 export const [valuta, setValuta] = createSignal("EUR")
 
@@ -19,6 +17,7 @@ function App() {
     </Router>
   );
 }
+
 
 export function Root(props) {
   return (

@@ -11,16 +11,16 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "daisyui": "^5.0.0-beta.6",
+    "daisyui": "^5.0.0-beta.7",
     "vite": "^6.0.0",
     "vite-plugin-solid": "^2.11.1"
   },
   "dependencies": {
     "@solidjs/router": "^0.15.3",
     "@supabase/supabase-js": "^2.48.1",
-    "@tailwindcss/vite": "^4.0.3",
+    "@tailwindcss/vite": "^4.0.5",
     "cally": "^0.7.2",
     "solid-js": "^1.9.3",
-    "tailwindcss": "^4.0.3"
+    "tailwindcss": "^4.0.5"
   }
 }

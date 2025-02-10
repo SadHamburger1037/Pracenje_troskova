@@ -1,6 +1,6 @@
 import { createEffect, createSignal, For } from "solid-js";
 import { supabase } from "../servisi/supabase";
-import { valuta } from "../src/App";
+import { valuta } from "../App";
 
 const [vrste, setVrste] = createSignal([])
 const [newTypeVisible, setNewTypeVisible] = createSignal(false)

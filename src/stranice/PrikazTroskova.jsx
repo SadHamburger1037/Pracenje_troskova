@@ -1,6 +1,6 @@
 import { createEffect, createSignal, For, onMount, Show, Suspense } from "solid-js"
 import { supabase } from "../servisi/supabase"
-import { valuta } from "../src/App";
+import { valuta } from "../App";
 
 export default function PrikazTroskova(props) {
 
@@ -82,8 +82,8 @@ export default function PrikazTroskova(props) {
                         <tbody>
                             <For each={troskovi()}>
                                 {(item) =>
-                                    <tr class="justify-center items-center bg-center">
-                                        <td style={`background-color: ${item.boja}; border: 1px solid black; border-radius: 20px; overflow: hidden; display: flex; max-width: 50%; align-items: center; justify-content: center; background-position: center`}>{item.vrsta_troska}</td>
+                                    <tr>
+                                        <td class="flex flex-col items-center"><div style={`background-color: ${item.boja}`} class="p-2 rounded-2xl flex-none">{item.vrsta_troska}</div></td>
                                         <td>{item.kolicina} {valuta}</td>
                                         <td>{new Date(item.datum_troska).toLocaleDateString()}</td>
                                         <td>{new Date(item.created_at).toLocaleDateString()}</td>
