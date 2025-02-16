@@ -61,7 +61,7 @@ export default function UpravljanjeVrstama(props) {
                 <form onSubmit={formSubmitVrsta} class="flex flex-col navbar-center mt-10">
                     <input type="text" name="ime" placeholder={"Unesite ime:"} class="input input-bordered w-full max-w-xs m-2" required="" />
                     <input type="color" name="boja" class="input input-bordered w-full max-w-xs m-2" required="" />
-                    <button type="submit" class="">Unesi</button>
+                    <button type="submit" class="btn btn-ghost text-xl mt-3.5">Unesi</button>
                 </form>
             <Show when={vrste().length > 0} fallback={
                 <div role="alert" class="alert alert-info  m-10">

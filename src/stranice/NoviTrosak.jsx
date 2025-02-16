@@ -1,6 +1,9 @@
 import { createEffect, createSignal, For } from "solid-js";
 import { supabase } from "../servisi/supabase";
 import { valuta } from "../App";
+import { UseAuth } from "../components/AuthProvider";
+
+const session = UseAuth();
 
 const [vrste, setVrste] = createSignal([])
 const [newTypeVisible, setNewTypeVisible] = createSignal(false)
@@ -120,7 +123,7 @@ export default function NoviTrosak(props) {
                         </For>
                         <option onclick={() => toggleNewTypeVisible()}>Stvori novu vrstu</option>
                     </select>
-                    <button type="submit" class="">Unesi</button>
+                    <button type="submit" class="btn btn-ghost text-xl mt-3">Unesi</button>
                 </form>
             </Show>
             <Show when={newTypeVisible()}>
@@ -128,7 +131,7 @@ export default function NoviTrosak(props) {
                 <form onSubmit={formSubmitVrsta} class="flex flex-col navbar-center mt-10">
                     <input type="text" name="ime" placeholder={"Unesite ime:"} class="input input-bordered w-full max-w-xs m-2" required="" />
                     <input type="color" name="boja" class="input input-bordered w-full max-w-xs m-2" required="" />
-                    <button type="submit" class="">Unesi</button>
+                    <button type="submit" class="btn btn-ghost text-xl mt-3.5">Unesi</button>
                 </form>
             </Show>
         </>

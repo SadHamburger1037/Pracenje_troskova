@@ -1,11 +1,17 @@
 import { Router, Route, A } from "@solidjs/router";
 import NoviTrosak from './stranice/NoviTrosak';
 import PrikazTroskova from './stranice/PrikazTroskova';
-import { createSignal } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 import Grafikon from "./stranice/Grafikon"
 import UpravljanjeVrstama from './stranice/UpravljanjeVrstama';
+import { UseAuth } from "./components/AuthProvider";
+import Prijava from "./stranice/Prijava"
+import Odjava from "./stranice/Odjava";
+
 
 export const [valuta, setValuta] = createSignal("EUR")
+
+const session = UseAuth();
 
 function App() {
   return (
@@ -14,6 +20,8 @@ function App() {
       <Route path="/prikaz" component={PrikazTroskova} />
       <Route path="/grafikon" component={Grafikon} />
       <Route path="/vrste" component={UpravljanjeVrstama}/>
+      <Route path="/prijava" component={Prijava} />
+      <Route path="/odjava" component={Odjava} />
     </Router>
   );
 }
@@ -24,6 +32,7 @@ export function Root(props) {
     <>
       <div class="navbar bg-base-100 shadow-sm">
         <div class="navbar-start">
+          <Show when={session}>
           <div class="dropdown dropdown-hover">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /> </svg>
@@ -37,6 +46,12 @@ export function Root(props) {
               <li><A href='/vrste'>Upravljanje Vrstama</A></li>
             </ul>
           </div>
+          </Show>
+          <Show when={!session}>
+              <div class="btn text-xl">
+                <A href="/prijava">Prijava</A>
+              </div>
+          </Show>
         </div>
         <div class="navbar-center">
           <A class="btn btn-ghost text-xl" href='/'>Praćenje Troškova</A>
