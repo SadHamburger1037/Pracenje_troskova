@@ -4,7 +4,7 @@ import { supabase } from "../servisi/supabase";
 const AuthContext = createContext();
 
 export function UseAuth(){
-    return useContext(AuthContext)
+    return useContext(AuthContext);
 }
 
 export function AuthProvider(props){
@@ -25,7 +25,7 @@ export function AuthProvider(props){
 
     return(
         <Show when={!loading()}>
-            <AuthContext.Provider value={session()}>{props.children}</AuthContext.Provider>
+            <AuthContext.Provider value={session}>{props.children}</AuthContext.Provider>
         </Show>
     )
 }

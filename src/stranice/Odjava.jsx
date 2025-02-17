@@ -1,7 +1,11 @@
 import { createSignal, onMount } from "solid-js";
 import { supabase } from "../servisi/supabase";
+import { Navigate, useNavigate } from "@solidjs/router";
 
 export default function Odjava(){
+
+    const navigate = useNavigate()
+
     const [result, setResult] = createSignal(null)
     onMount(async () => {
         const result = await supabase.auth.signOut();
@@ -9,6 +13,7 @@ export default function Odjava(){
             setResult("Odjava nije uspijela")
         }else{
             setResult("Odjava uspjesna")
+            navigate("/", { replace: false })
         }
     })
 

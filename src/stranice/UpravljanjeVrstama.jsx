@@ -1,7 +1,10 @@
 import { createEffect, createSignal } from "solid-js"
 import { supabase } from "../servisi/supabase"
+import { UseAuth } from "../components/AuthProvider"
 
 export default function UpravljanjeVrstama(props) {
+
+    const session = UseAuth()
 
     let [vrste, setVrste] = createSignal([])
 
@@ -9,6 +12,7 @@ export default function UpravljanjeVrstama(props) {
         let { data, error } = await supabase
             .from('Vrste_troskova')
             .select('*')
+            .eq('author_id', session().user.id)
         if (error) {
             alert("Dogodila se greška, pokušajte ponovo :(")
         } else {
@@ -38,9 +42,11 @@ export default function UpravljanjeVrstama(props) {
     
         const { data, error } = await supabase
             .from('Vrste_troskova')
-            .insert([
-                { ime: ime, boja: boja },
-            ])
+            .insert([{
+                ime: ime,
+                boja: boja,
+                author_id: session().user.id
+            }])
             .select()
         if (!error) {
             event.target.reset()

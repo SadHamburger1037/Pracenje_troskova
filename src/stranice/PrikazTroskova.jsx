@@ -1,17 +1,20 @@
 import { createEffect, createSignal, For, onMount, Show, Suspense } from "solid-js"
 import { supabase } from "../servisi/supabase"
 import { valuta } from "../App";
+import { UseAuth } from "../components/AuthProvider";
 
 export default function PrikazTroskova(props) {
+
+    const session = UseAuth()
 
     const [troskovi, setTroskovi] = createSignal([]);
     const [sveukupniTrosak, setSveukupniTrosak] = createSignal(0);
 
     async function prikazivanje() {
-
         let { data, error } = await supabase
             .from('Troskovi')
             .select('*')
+            .eq('author_id', session().user.id)
         if (error) {
             alert("Dogodila se greška, pokušajte ponovo :(")
         } else {
@@ -100,7 +103,13 @@ export default function PrikazTroskova(props) {
                     <span>Ukupan trošak: {sveukupniTrosak()} {valuta}</span>
                 </div>
             </Show>
-
+            <Show when={!session()}>
+                <div class="w-full flex justify-center">
+                    <div role="alert" class="alert alert-error w-80 text-xl m-20 flex justify-center">
+                        <span class="max-w-80 flex">Niste prijavljeni!</span>
+                    </div>
+                </div>
+            </Show>
         </>
     )
 }

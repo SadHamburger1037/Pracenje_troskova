@@ -18,8 +18,6 @@ export default function Prijava(props) {
     const [result, setResult] = createSignal(null)
 
     const session = UseAuth()
-    console.log(session);
-    
 
     async function formSubmit(event) {
         event.preventDefault();
@@ -46,6 +44,12 @@ export default function Prijava(props) {
         const formData = new FormData(event.target)
         const email = formData.get("email")
         const password = formData.get("password")
+        const confirm_password = formData.get("confirm_password")
+
+        if (password != confirm_password){
+            alert("Lozinke se ne podudaraju")
+            return 0
+        }
 
         const { data, error } = await supabase.auth.signUp({
             email: email,
@@ -64,36 +68,29 @@ export default function Prijava(props) {
     return (
         <>
             <Show when={!registracija()}>
-                <div>Prijava</div>
-                <form onSubmit={formSubmit}>
+            <div class="text-3xl text-center mt-10">Prijava</div>
+                <form onSubmit={formSubmit} class="flex flex-col navbar-center mt-10">
                     <label>Email adresa</label>
-                    <input type="email" name="email" required="" /><br />
+                    <input type="email" name="email" class="input input-bordered w-full max-w-xs m-2 mb-6" required="" />
                     <label>Lozinka</label>
-                    <input type="password" name="password" required="" min="3" /><br />
-                    <input type="Submit" value="Pošalji" class="bg-slate-600 text-white p-2 rounded" />
+                    <input type="password" name="password" class="input input-bordered w-full max-w-xs m-2 mb-6" required="" />
+                    <button onclick={() => { toggleRegistracija() }} class="underline">registriraj se</button>
+                    <button type="submit" class="btn btn-ghost text-xl mt-3.5">Prijavi se</button>
                 </form>
-
             </Show>
             <Show when={registracija()}>
-                <div>Registracija</div>
-                <form onSubmit={formSubmitReg}>
+            <div class="text-3xl text-center mt-10">Registracija</div>
+                <form onSubmit={formSubmitReg} class="flex flex-col navbar-center mt-10">
                     <label>Email adresa</label>
-                    <input type="email" name="email" required="" /><br />
+                    <input type="email" name="email" class="input input-bordered w-full max-w-xs m-2 mb-6" required="" />
                     <label>Lozinka</label>
-                    <input type="password" name="password" required="" min="3" /><br />
-                    <input type="Submit" value="Pošalji" class="bg-slate-600 text-white p-2 rounded" />
+                    <input type="password" name="password" class="input input-bordered w-full max-w-xs m-2 mb-6" required="" minLength="8"/>
+                    <label>Ponovite Lozinku</label>
+                    <input type="password" name="confirm_password" class="input input-bordered w-full max-w-xs m-2 mb-6" required="" minLength="8"/>
+                    <button onclick={() => { toggleRegistracija() }} class="underline">prijavi se</button>
+                    <button type="submit" class="btn btn-ghost text-xl mt-3.5">Registriraj se</button>
                 </form>
             </Show>
-
-            <div>
-                <button onclick={() => { toggleRegistracija() }} class="btn text-2xl m-5">registriraj se</button>
-            </div>
-
-            <div>
-            <AuthProvider>
-                Korisnik: {session() ? "prijavljen" : "nije prijavljen"}
-                </AuthProvider>
-            </div>
 
             <Show when={result()}>{result()}</Show>
         </>
