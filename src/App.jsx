@@ -45,7 +45,7 @@ export function Root(props) {
                 class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow">
                 <li><A href='/'>Novi Trosak</A></li>
                 <li><A href='/prikaz'>Prikaz Troskova</A></li>
-                <li><A href='/grafikon'>Tortni Grafikon</A></li>
+                <li><A href='/grafikon'>Grafikon</A></li>
                 <li><A href='/vrste'>Upravljanje Vrstama</A></li>
               </ul>
             </div>

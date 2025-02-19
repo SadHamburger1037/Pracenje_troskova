@@ -3,6 +3,7 @@ import { supabase } from "../servisi/supabase"
 import { valuta } from "../App";
 import { UseAuth } from "../components/AuthProvider";
 import { endOfMonth, endOfWeek, endOfYear, format, formatDate, startOfMonth, startOfWeek, startOfYear } from "date-fns";
+import { odabirRaspona, rasponOdabir, rasponDatum, setRasponOdabir, resetRaspon } from "../servisi/raspon";
 
 export default function PrikazTroskova(props) {
 
@@ -10,8 +11,6 @@ export default function PrikazTroskova(props) {
 
     const [troskovi, setTroskovi] = createSignal([]);
     const [sveukupniTrosak, setSveukupniTrosak] = createSignal(0);
-    const [rasponOdabir, setRasponOdabir] = createSignal("Mjesec");
-    const [rasponDatum, setRasponDatum] = createSignal([formatDate(startOfMonth(Date.now()), "yyyy-MM-dd"), formatDate(endOfMonth(Date.now()), "yyyy-MM-dd")])
 
     async function prikazivanje() {
         if (!rasponDatum()) {
@@ -61,45 +60,14 @@ export default function PrikazTroskova(props) {
         }
     }
 
-    function odabirRaspona() {
-        if (rasponOdabir() == "Mjesec") {
-            raspon1 = document.getElementById("raspon1").value
-            const pocetakMjeseca = format(startOfMonth(raspon1), "yyyy-MM-dd")
-            const krajMjeseca = format(endOfMonth(raspon1), "yyyy-MM-dd")
-            setRasponDatum([pocetakMjeseca, krajMjeseca])
-            return 0
-        } if (rasponOdabir() == "Godina") {
-            raspon1 = document.getElementById("raspon1").value
-            const pocetakGodine = format(startOfYear(raspon1), "yyyy-MM-dd")
-            const krajGodine = format(endOfYear(raspon1), "yyyy-MM-dd")
-            setRasponDatum([pocetakGodine, krajGodine])
-            return 0
-        } if (rasponOdabir() == "Tjedan") {
-            raspon1 = document.getElementById("raspon1").value
-            const pocetakTjedna = format(startOfWeek(raspon1), "yyyy-MM-dd")
-            const krajTjedna = format(endOfWeek(raspon1), "yyyy-MM-dd")
-            setRasponDatum([pocetakTjedna, krajTjedna])
-            return 0
-        } if (rasponOdabir() == "Dan") {
-            raspon1 = document.getElementById("raspon1").value
-            setRasponDatum([raspon1, raspon1])
-            return 0
-        } if (rasponOdabir() == "Prilagođeni raspon" && document.getElementById("raspon1").value && document.getElementById("raspon2").value) {
-            raspon1 = document.getElementById("raspon1").value
-            raspon2 = document.getElementById("raspon2").value
-            setRasponDatum([raspon1, raspon2])
-            return 0
-        } else {
-            setRasponDatum()
-        }
-    }
-
+    onMount(async () => {
+        resetRaspon()
+        await prikazivanje()
+    })
 
     createEffect(async () => {
         await prikazivanje()
     })
-
-
 
     return (
         <>
