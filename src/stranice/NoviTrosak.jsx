@@ -30,6 +30,10 @@ export default function NoviTrosak(props) {
         const datum_troska = formData.get("datum_troska")
         const opis_troska = formData.get("opis_troska")
         let vrsta_troska = formData.get("vrsta_troska")
+        
+        if (!vrsta_troska){
+            vrsta_troska = 1
+        }
 
         const { error } = await supabase
             .from("Troskovi")

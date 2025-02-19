@@ -73,7 +73,7 @@ export default function PrikazTroskova(props) {
         <>
             <div>
                 <div class="m-2 text-xl">Odaberite raspon</div>
-                <select class="select select-bordered w-full max-w-xs m-2" id="odabirRaspona" onchange={() => setRasponOdabir(document.getElementById("odabirRaspona").value)}>
+                <select class="select select-bordered w-full max-w-xs m-2" id="odabirRaspona" onchange={async () => {await setRasponOdabir(document.getElementById("odabirRaspona").value); odabirRaspona()}}>
                     <option selected>Mjesec</option>
                     <option>Godina</option>
                     <option>Tjedan</option>
@@ -82,10 +82,10 @@ export default function PrikazTroskova(props) {
                     <option>Prilagođeni raspon</option>
                 </select>
                 <Show when={rasponOdabir() != "Svi troškovi"}>
-                    <input type="date" id="raspon1" class="input input-bordered w-full max-w-xs m-2" onchange={() => odabirRaspona()} />
+                    <input type="date" id="raspon1" class="input input-bordered w-full max-w-xs m-2" onchange={async () => { await odabirRaspona()}}/>
                 </Show>
                 <Show when={rasponOdabir() == "Prilagođeni raspon"}>
-                    <input type="date" id="raspon2" class="input input-bordered w-full max-w-xs m-2" onchange={() => odabirRaspona()} />
+                    <input type="date" id="raspon2" class="input input-bordered w-full max-w-xs m-2" onchange={async () => { await odabirRaspona()}}/>
                 </Show>
             </div>
             <Show when={troskovi().length > 0} fallback={

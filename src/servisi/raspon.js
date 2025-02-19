@@ -23,6 +23,8 @@ export function odabirRaspona() {
             const pocetakGodine = format(startOfYear(raspon1), "yyyy-MM-dd")
             const krajGodine = format(endOfYear(raspon1), "yyyy-MM-dd")
             setRasponDatum([pocetakGodine, krajGodine])
+            console.log(rasponDatum);
+            
             return 0
         } if (rasponOdabir() == "Tjedan") {
             raspon1 = document.getElementById("raspon1").value

@@ -49,14 +49,14 @@ export default function Grafikon() {
                 }
             }
             setCostData(data)
-            if (chart){
-                chart.destroy()
-                createChart()
-            }
+            createChart()
         }
     }
 
     function createChart(){
+        if (chart){
+            chart.destroy()
+        }
         chart = new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -82,7 +82,7 @@ export default function Grafikon() {
         <>
             <div>
                 <div class="m-2 text-xl">Odaberite raspon</div>
-                <select class="select select-bordered w-full max-w-xs m-2" id="odabirRaspona" onchange={() => setRasponOdabir(document.getElementById("odabirRaspona").value)}>
+                <select class="select select-bordered w-full max-w-xs m-2" id="odabirRaspona" onchange={async () => {await setRasponOdabir(document.getElementById("odabirRaspona").value); odabirRaspona(); loadExpenses()}}>
                     <option selected>Mjesec</option>
                     <option>Godina</option>
                     <option>Tjedan</option>
@@ -94,7 +94,7 @@ export default function Grafikon() {
                     <input type="date" id="raspon1" class="input input-bordered w-full max-w-xs m-2" onchange={async () => { await odabirRaspona(); loadExpenses() }} />
                 </Show>
                 <Show when={rasponOdabir() == "Prilagođeni raspon"}>
-                    <input type="date" id="raspon2" class="input input-bordered w-full max-w-xs m-2" onchange={() => odabirRaspona()} />
+                    <input type="date" id="raspon2" class="input input-bordered w-full max-w-xs m-2" onchange={async () => { await odabirRaspona(); loadExpenses() }} />
                 </Show>
             </div>
             <div class="w-full flex m-10"><canvas ref={ctx} id="acquisitions" class="max-w-150 max-h-180"></canvas></div>
