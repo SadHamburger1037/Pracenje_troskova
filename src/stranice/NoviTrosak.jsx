@@ -31,22 +31,6 @@ export default function NoviTrosak(props) {
         const opis_troska = formData.get("opis_troska")
         let vrsta_troska = formData.get("vrsta_troska")
 
-        console.log(vrsta_troska)
-
-        const { data, error2 } = await supabase
-            .from('Vrste_troskova')
-            .select('id')
-            .eq('ime', vrsta_troska);
-
-        console.log(data);
-
-
-        if (!data[0]) {
-            vrsta_troska = 1
-        } else {
-            vrsta_troska = data[0].id
-        }
-
         const { error } = await supabase
             .from("Troskovi")
             .insert({
@@ -86,7 +70,7 @@ export default function NoviTrosak(props) {
             .select()
         if (!error) {
             event.target.reset()
-            await setCurrentFormData((old) => ({ ...old, vrsta: ime }))
+            await setCurrentFormData((old) => ({ ...old, vrsta: data[0].id }))
             await ucitajVrste()
             toggleNewTypeVisible()
         } else {
@@ -131,7 +115,7 @@ export default function NoviTrosak(props) {
                         <select class="select select-bordered w-full max-w-xs" name="vrsta_troska" oninput={() => { handleFormData("vrsta", event) }} value={currentFormData().vrsta}>
                             <option disabled selected>Vrsta troška</option>
                             <For each={vrste()}>
-                                {(item) => <option>{item.ime} </option>}
+                                {(item) => <option value={item.id}>{item.ime} </option>}
                             </For>
                             <option onclick={() => toggleNewTypeVisible()}>Stvori novu vrstu</option>
                         </select>

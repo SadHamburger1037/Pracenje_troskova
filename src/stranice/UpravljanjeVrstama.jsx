@@ -27,8 +27,6 @@ export default function UpravljanjeVrstama(props) {
             .eq('id', vrstaID)
         if (error) {
             alert("Brisanje nije uspijelo")
-            console.log(error);
-            
         } else {
             await prikazVrsta();
         }
@@ -97,7 +95,7 @@ export default function UpravljanjeVrstama(props) {
                             <For each={vrste()}>
                                 {(item) =>
                                     <tr>
-                                        <td style={`background-color: ${item.boja}`} class="p-2 rounded-2xl flex justify-center max-w-40">{item.ime}</td>
+                                        <td class="flex flex-col items-center"><div style={`background-color: ${item.boja}`} class="p-2 rounded-2xl flex-none">{item.ime}</div></td>
                                         <td><button class="btn btn-outline btn-error" onclick={() => { brisanjeVrste(item.id) }}>Briši</button></td>
                                     </tr>
                                 }

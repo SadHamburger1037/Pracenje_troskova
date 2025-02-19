@@ -9,8 +9,6 @@ const [registracija, setRegistracija] = createSignal(false)
 
 function toggleRegistracija() {
     setRegistracija(old => !old)
-    console.log(registracija());
-
 }
 
 export default function Prijava(props) {
@@ -30,7 +28,6 @@ export default function Prijava(props) {
             password: password
         })
 
-        console.log(result)
         if (result.error) {
             setResult("Dogodila se greska prilikom prijave")
         } else {
@@ -56,7 +53,6 @@ export default function Prijava(props) {
             password: password,
         })
 
-        console.log(result)
         if (result.error) {
             setResult("Dogodila se greska prilikom registracija")
         } else {

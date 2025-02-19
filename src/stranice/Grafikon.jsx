@@ -3,6 +3,7 @@ import { createEffect, createSignal, onMount } from 'solid-js';
 import { UseAuth } from '../components/AuthProvider';
 import { supabase } from '../servisi/supabase';
 
+//raspone deti u servise pod odabirRaspoa.js i tak spojit grafiko i prikaz troskova
 
 export default function Grafikon() {
 
@@ -40,22 +41,8 @@ export default function Grafikon() {
         }
     }
 
-
-    const data = [
-        { year: 2010, count: 10 },
-        { year: 2011, count: 20 },
-        { year: 2012, count: 15 },
-        { year: 2013, count: 25 },
-        { year: 2014, count: 22 },
-        { year: 2015, count: 30 },
-        { year: 2016, count: 28 },
-    ];
-
-
-
     onMount(async () => {
         await loadExpenses()
-        console.log(costData());
         const chart = new Chart(ctx, {
             type: 'pie',
             data: {

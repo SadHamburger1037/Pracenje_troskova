@@ -10,37 +10,37 @@ export default function PrikazTroskova(props) {
 
     const [troskovi, setTroskovi] = createSignal([]);
     const [sveukupniTrosak, setSveukupniTrosak] = createSignal(0);
-    const [rasponOdabir, setRasponOdabir] = createSignal("");
-    const [rasponDatum, setRasponDatum] = createSignal()
+    const [rasponOdabir, setRasponOdabir] = createSignal("Mjesec");
+    const [rasponDatum, setRasponDatum] = createSignal([formatDate(startOfMonth(Date.now()), "yyyy-MM-dd"), formatDate(endOfMonth(Date.now()), "yyyy-MM-dd")])
 
     async function prikazivanje() {
-            if(!rasponDatum()){
-                var { data, error } = await supabase
+        if (!rasponDatum()) {
+            var { data, error } = await supabase
                 .from('Troskovi')
                 .select('*')
                 .eq('author_id', session().user.id)
-            } else {
-                var { data, error } = await supabase
+        } else {
+            var { data, error } = await supabase
                 .from('Troskovi')
                 .select('*')
                 .eq('author_id', session().user.id)
                 .gte('datum_troska', rasponDatum()[0])
                 .lte('datum_troska', rasponDatum()[1])
+        }
+
+        if (error) {
+            alert("Dogodila se greška, pokušajte ponovo :(")
+        } else {
+            for (let i = 0; i < data.length; i++) {
+                let { data: data2, error2 } = await supabase
+                    .from('Vrste_troskova')
+                    .select('*')
+                    .eq('id', data[i].vrsta_troska);
+                data[i].vrsta_troska = data2[0].ime
+                data[i].boja = data2[0].boja
             }
-            
-            if (error) {
-                alert("Dogodila se greška, pokušajte ponovo :(")
-            } else {
-                for (let i = 0; i < data.length; i++) {
-                    let { data: data2, error2 } = await supabase
-                        .from('Vrste_troskova')
-                        .select('*')
-                        .eq('id', data[i].vrsta_troska);
-                    data[i].vrsta_troska = data2[0].ime
-                    data[i].boja = data2[0].boja
-                }
-                setTroskovi(data)
-            }
+            setTroskovi(data)
+        }
 
         setSveukupniTrosak(0)
 
@@ -62,28 +62,35 @@ export default function PrikazTroskova(props) {
     }
 
     function odabirRaspona() {
-        if (rasponOdabir() == "Mjesec"){
+        if (rasponOdabir() == "Mjesec") {
             raspon1 = document.getElementById("raspon1").value
             const pocetakMjeseca = format(startOfMonth(raspon1), "yyyy-MM-dd")
             const krajMjeseca = format(endOfMonth(raspon1), "yyyy-MM-dd")
-            setRasponDatum([pocetakMjeseca, krajMjeseca])          
-        } if (rasponOdabir() == "Godina"){
+            setRasponDatum([pocetakMjeseca, krajMjeseca])
+            return 0
+        } if (rasponOdabir() == "Godina") {
             raspon1 = document.getElementById("raspon1").value
             const pocetakGodine = format(startOfYear(raspon1), "yyyy-MM-dd")
             const krajGodine = format(endOfYear(raspon1), "yyyy-MM-dd")
-            setRasponDatum([pocetakGodine, krajGodine])   
-        } if (rasponOdabir() == "Tjedan"){
+            setRasponDatum([pocetakGodine, krajGodine])
+            return 0
+        } if (rasponOdabir() == "Tjedan") {
             raspon1 = document.getElementById("raspon1").value
             const pocetakTjedna = format(startOfWeek(raspon1), "yyyy-MM-dd")
             const krajTjedna = format(endOfWeek(raspon1), "yyyy-MM-dd")
-            setRasponDatum([pocetakTjedna, krajTjedna])   
-        } if (rasponOdabir() == "Dan"){
+            setRasponDatum([pocetakTjedna, krajTjedna])
+            return 0
+        } if (rasponOdabir() == "Dan") {
             raspon1 = document.getElementById("raspon1").value
-            setRasponDatum([raspon1, raspon1])   
-        } if (rasponOdabir() == "Prilagođeni raspon" && document.getElementById("raspon1").value && document.getElementById("raspon2").value){
+            setRasponDatum([raspon1, raspon1])
+            return 0
+        } if (rasponOdabir() == "Prilagođeni raspon" && document.getElementById("raspon1").value && document.getElementById("raspon2").value) {
             raspon1 = document.getElementById("raspon1").value
             raspon2 = document.getElementById("raspon2").value
             setRasponDatum([raspon1, raspon2])
+            return 0
+        } else {
+            setRasponDatum()
         }
     }
 
@@ -93,8 +100,26 @@ export default function PrikazTroskova(props) {
     })
 
 
+
     return (
         <>
+            <div>
+                <div class="m-2 text-xl">Odaberite raspon</div>
+                <select class="select select-bordered w-full max-w-xs m-2" id="odabirRaspona" onchange={() => setRasponOdabir(document.getElementById("odabirRaspona").value)}>
+                    <option selected>Mjesec</option>
+                    <option>Godina</option>
+                    <option>Tjedan</option>
+                    <option>Dan</option>
+                    <option onclick={() => odabirRaspona()}>Svi troškovi</option>
+                    <option>Prilagođeni raspon</option>
+                </select>
+                <Show when={rasponOdabir() != "Svi troškovi"}>
+                    <input type="date" id="raspon1" class="input input-bordered w-full max-w-xs m-2" onchange={() => odabirRaspona()} />
+                </Show>
+                <Show when={rasponOdabir() == "Prilagođeni raspon"}>
+                    <input type="date" id="raspon2" class="input input-bordered w-full max-w-xs m-2" onchange={() => odabirRaspona()} />
+                </Show>
+            </div>
             <Show when={troskovi().length > 0} fallback={
                 <div role="alert" class="alert alert-info  m-10">
                     <svg
@@ -111,20 +136,6 @@ export default function PrikazTroskova(props) {
                     <span>Nema troškova</span>
                 </div>
             }>
-                <div>
-                    <div>Odaberite raspon</div>
-                    <select class="select select-bordered w-full max-w-xs" id="odabirRaspona" onchange={() => setRasponOdabir(document.getElementById("odabirRaspona").value)}>
-                        <option selected>Mjesec</option>
-                        <option>Godina</option>
-                        <option>Tjedan</option>
-                        <option>Dan</option>
-                        <option>Prilagođeni raspon</option>
-                    </select>
-                    <input type="date" id="raspon1" onchange={() => odabirRaspona()} />
-                    <Show when={rasponOdabir() == "Prilagođeni raspon"}>
-                        <input type="date" id="raspon2" onchange={() => odabirRaspona()} />
-                    </Show>
-                </div>
                 <div class="overflow-x-auto">
                     <table class="table text-center">
                         <thead>
