@@ -3,7 +3,7 @@ import { supabase } from "../servisi/supabase"
 import { valuta } from "../App";
 import { UseAuth } from "../components/AuthProvider";
 import { endOfMonth, endOfWeek, endOfYear, format, formatDate, startOfMonth, startOfWeek, startOfYear } from "date-fns";
-import { odabirRaspona, rasponOdabir, rasponDatum, setRasponOdabir, resetRaspon } from "../servisi/raspon";
+import { odabirRaspona, rasponOdabir, rasponDatum, setRasponOdabir, resetRaspon, trenutniDatum, setTrenutniDatum } from "../servisi/raspon";
 
 export default function PrikazTroskova(props) {
 
@@ -65,28 +65,40 @@ export default function PrikazTroskova(props) {
         await prikazivanje()
     })
 
+
     createEffect(async () => {
+
+
         await prikazivanje()
     })
 
+
+
     return (
         <>
-            <div>
-                <div class="m-2 text-xl">Odaberite raspon</div>
-                <select class="select select-bordered w-full max-w-xs m-2" id="odabirRaspona" onchange={async () => {await setRasponOdabir(document.getElementById("odabirRaspona").value); odabirRaspona()}}>
-                    <option selected>Mjesec</option>
-                    <option>Godina</option>
-                    <option>Tjedan</option>
-                    <option>Dan</option>
-                    <option onclick={() => odabirRaspona()}>Svi troškovi</option>
-                    <option>Prilagođeni raspon</option>
-                </select>
-                <Show when={rasponOdabir() != "Svi troškovi"}>
-                    <input type="date" id="raspon1" class="input input-bordered w-full max-w-xs m-2" onchange={async () => { await odabirRaspona()}}/>
-                </Show>
-                <Show when={rasponOdabir() == "Prilagođeni raspon"}>
-                    <input type="date" id="raspon2" class="input input-bordered w-full max-w-xs m-2" onchange={async () => { await odabirRaspona()}}/>
-                </Show>
+            <div class="flex flex-col items-center">
+                <div class="flex">
+                    <div class="m-10 text-2xl">Odaberite raspon</div>
+                    </div>
+                    <div class="flex flex-row items-center w-1/2">
+                    <select class="select select-bordered w-full max-w-xs m-2" id="odabirRaspona" onchange={async () => { await setRasponOdabir(document.getElementById("odabirRaspona").value); odabirRaspona() }}>
+                        <option selected>Mjesec</option>
+                        <option>Godina</option>
+                        <option>Tjedan</option>
+                        <option>Dan</option>
+                        <option onclick={() => odabirRaspona()}>Svi troškovi</option>
+                        <option>Prilagođeni raspon</option>
+                    </select>
+                    
+                    
+                    <Show when={rasponOdabir() != "Svi troškovi"}>
+                        <input type="date" id="raspon1" class="input input-bordered w-full max-w-xs m-2" value={trenutniDatum()} onchange={async () => { odabirRaspona(); setTrenutniDatum(document.getElementById("raspon1").value) }} />
+                    </Show>
+                    <Show when={rasponOdabir() == "Prilagođeni raspon"}>
+                        <input type="date" id="raspon2" class="input input-bordered w-full max-w-xs m-2" onchange={async () => { await odabirRaspona() }} />
+                    </Show>
+                    </div>
+                
             </div>
             <Show when={troskovi().length > 0} fallback={
                 <div role="alert" class="alert alert-info  m-10">
@@ -111,7 +123,7 @@ export default function PrikazTroskova(props) {
                                 <th>Vrsta</th>
                                 <th>Trošak</th>
                                 <th>Datum Troška</th>
-                                <th>Datum Unosa</th>
+                                <th>Opis Troška</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -119,11 +131,11 @@ export default function PrikazTroskova(props) {
                             <For each={troskovi()}>
                                 {(item) =>
                                     <tr>
-                                        <td class="flex flex-col items-center"><div style={`background-color: ${item.boja}`} class="p-2 rounded-2xl flex-none">{item.vrsta_troska}</div></td>
-                                        <td>{item.kolicina} {valuta}</td>
-                                        <td>{new Date(item.datum_troska).toLocaleDateString()}</td>
-                                        <td>{new Date(item.created_at).toLocaleDateString()}</td>
-                                        <td><button class="btn btn-outline btn-error" onclick={() => { brisanjeTroska(item.id) }}>Briši</button></td>
+                                        <td class="flex flex-col items-center text-center"><div style={`background-color: ${item.boja}`} class="p-2 rounded-2xl flex-none">{item.vrsta_troska}</div></td>
+                                        <td class="w-1/5">{item.kolicina} {valuta}</td>
+                                        <td class="w-1/5">{new Date(item.datum_troska).toLocaleDateString()}</td>
+                                        <td class="text-wrap w-1/5"><Show when={item.opis_troska} fallback="/">{item.opis_troska}</Show></td>
+                                        <td class="w-1/5"><button class="btn btn-outline btn-error" onclick={() => { brisanjeTroska(item.id) }}>Briši</button></td>
                                     </tr>
                                 }
                             </For>
@@ -132,8 +144,8 @@ export default function PrikazTroskova(props) {
                 </div>
             </Show>
             <Show when={sveukupniTrosak()}>
-                <div role="alert" class="alert alert-info m-10 text-2xl">
-                    <span>Ukupan trošak: {sveukupniTrosak()} {valuta}</span>
+                <div role="alert" class="alert alert-info m-auto mt-10 text-3xl flex items-center w-fit">
+                    <span class="m-auto">Ukupan trošak: {sveukupniTrosak()} {valuta}</span>
                 </div>
             </Show>
             <Show when={!session()}>

@@ -3,28 +3,25 @@ import { createSignal } from "solid-js";
 
 export const [rasponOdabir, setRasponOdabir] = createSignal("Mjesec");
 export const [rasponDatum, setRasponDatum] = createSignal([formatDate(startOfMonth(Date.now()), "yyyy-MM-dd"), formatDate(endOfMonth(Date.now()), "yyyy-MM-dd")])
+export const [trenutniDatum, setTrenutniDatum] = createSignal(formatDate(Date.now(), "yyyy-MM-dd"))
 
 export function resetRaspon(){
     setRasponOdabir("Mjesec")
     setRasponDatum([formatDate(startOfMonth(Date.now()), "yyyy-MM-dd"), formatDate(endOfMonth(Date.now()), "yyyy-MM-dd")])
 }
 
-export function odabirRaspona() {
+export async function odabirRaspona() {
         if (rasponOdabir() == "Mjesec") {
-            raspon1 = document.getElementById("raspon1").value
+            raspon1 = await document.getElementById("raspon1").value
             const pocetakMjeseca = format(startOfMonth(raspon1), "yyyy-MM-dd")
             const krajMjeseca = format(endOfMonth(raspon1), "yyyy-MM-dd")
             setRasponDatum([pocetakMjeseca, krajMjeseca])
-            console.log("u js fileu");
-            
             return 0
         } if (rasponOdabir() == "Godina") {
             raspon1 = document.getElementById("raspon1").value
             const pocetakGodine = format(startOfYear(raspon1), "yyyy-MM-dd")
             const krajGodine = format(endOfYear(raspon1), "yyyy-MM-dd")
             setRasponDatum([pocetakGodine, krajGodine])
-            console.log(rasponDatum);
-            
             return 0
         } if (rasponOdabir() == "Tjedan") {
             raspon1 = document.getElementById("raspon1").value
@@ -43,5 +40,5 @@ export function odabirRaspona() {
             return 0
         } else {
             setRasponDatum()
-        }
+        }   
     }

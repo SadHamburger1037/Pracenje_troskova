@@ -63,12 +63,14 @@ export default function NoviTrosak(props) {
         const formData = new FormData(event.target)
         const ime = formData.get("ime")
         const boja = formData.get("boja")
+        const budzet = parseFloat(formData.get("budzet"))
 
         const { data, error } = await supabase
             .from('Vrste_troskova')
             .insert([{
                 ime: ime,
                 boja: boja,
+                mjesecni_budzet: budzet,
                 author_id: session().user.id
             }])
             .select()
@@ -113,23 +115,24 @@ export default function NoviTrosak(props) {
                 <Show when={!newTypeVisible()}>
                     <div class="text-3xl text-center mt-10">Upisivanje Troška</div>
                     <form onSubmit={formSubmitTrosak} class="flex flex-col navbar-center mt-10">
-                        <input type="number" step="0.01" name="kolicina" placeholder={"Unesite trošak u: " + valuta()} class="input input-bordered w-full max-w-xs m-2" required="" oninput={() => { handleFormData("kolicina", event) }} value={currentFormData().kolicina} />
+                        <input type="number" step="0.01" min="0.01" name="kolicina" id="test" placeholder={"Unesite trošak u: " + valuta()} class="input input-bordered w-full max-w-xs m-2" required="" onchange={(event) => { handleFormData("kolicina", event) }} value={currentFormData().kolicina} />
                         <input type="date" name="datum_troska" class="input input-bordered w-full max-w-xs m-2" required="" oninput={() => { handleFormData("datum", event) }} value={currentFormData().datum} />
-                        <textarea name="opis_troska" placeholder="Opis troška..." class="input input-bordered w-full max-w-xs m-2 h-16" oninput={() => { handleFormData("opis", event) }} value={currentFormData().opis}></textarea>
-                        <select class="select select-bordered w-full max-w-xs" name="vrsta_troska" oninput={() => { handleFormData("vrsta", event) }} value={currentFormData().vrsta}>
+                        <textarea name="opis_troska" placeholder="Opis troška..." class="input input-bordered w-full max-w-xs m-2 h-16 text-wrap" oninput={() => { handleFormData("opis", event) }} value={currentFormData().opis}></textarea>
+                        <select class="select select-bordered w-full max-w-xs m-2" name="vrsta_troska" oninput={() => { handleFormData("vrsta", event) }} value={currentFormData().vrsta}>
                             <option disabled selected>Vrsta troška</option>
                             <For each={vrste()}>
                                 {(item) => <option value={item.id}>{item.ime} </option>}
                             </For>
                             <option onclick={() => toggleNewTypeVisible()}>Stvori novu vrstu</option>
                         </select>
-                        <button type="submit" class="btn btn-ghost text-xl mt-3">Unesi</button>
+                        <button type="submit" class="btn text-2xl mt-3">Unesi</button>
                     </form>
                 </Show>
                 <Show when={newTypeVisible()}>
                     <div class="text-3xl text-center mt-10">Upisivanje Vrste</div>
                     <form onSubmit={formSubmitVrsta} class="flex flex-col navbar-center mt-10">
                         <input type="text" name="ime" placeholder={"Unesite ime:"} class="input input-bordered w-full max-w-xs m-2" required="" />
+                        <input type="number" name="budzet" step="0.01" min="0.01" placeholder={"Unesite mjesečni budžet:"} class="input input-bordered w-full max-w-xs m-2"/>
                         <input type="color" name="boja" class="input input-bordered w-full max-w-xs m-2" required="" />
                         <button type="submit" class="btn btn-ghost text-xl mt-3.5">Unesi</button>
                     </form>
