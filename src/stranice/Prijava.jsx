@@ -83,7 +83,7 @@ export default function Prijava(props) {
                     <input type="password" name="password" class="input input-bordered w-full max-w-xs m-2 mb-6" required="" minLength="8"/>
                     <label>Ponovite Lozinku</label>
                     <input type="password" name="confirm_password" class="input input-bordered w-full max-w-xs m-2 mb-6" required="" minLength="8"/>
-                    <button onclick={() => { toggleRegistracija() }} class="underline">prijavi se</button>
+                    <button onclick={() => { toggleRegistracija() }} class="underline">nazad na prijavu</button>
                     <button type="submit" class="btn btn-ghost text-xl mt-3.5">Registriraj se</button>
                 </form>
             </Show>

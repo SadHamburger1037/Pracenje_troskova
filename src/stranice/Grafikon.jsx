@@ -45,6 +45,12 @@ export default function Grafikon() {
                 data[i].boja = data2[0].boja
                 data[i].budzet = data2[0].mjesecni_budzet
             }
+
+            for (let i = 0; i < data.length; i++) {
+                console.log(data[i]);
+
+            }
+
             for (let i = 0; i < data.length; i++) {
                 for (let j = i + 1; j < data.length; j++) {
                     if (data[i].vrsta_troska == data[j].vrsta_troska) {
@@ -113,7 +119,7 @@ export default function Grafikon() {
                 </div>
 
                 <div class="w-1/2">
-                    <div class="m-5 text-2xl text-center">Mjesečni budžeti ({getMonth(budgetDate())+1}. mjesec {getYear(budgetDate())}.)</div>
+                    <div class="m-5 text-2xl text-center">Mjesečni budžeti ({getMonth(budgetDate()) + 1}. mjesec {getYear(budgetDate())}.)</div>
                     <table class="table text-center">
                         <thead>
                             <tr>
@@ -127,10 +133,10 @@ export default function Grafikon() {
                                 {(item) =>
                                     <Show when={item.budzet}>
                                         <tr>
-                                        <td class="flex flex-col items-center"><div style={`background-color: ${item.boja}`} class="p-2 rounded-2xl flex-none">{item.vrsta_troska}</div></td>
-                                        <td>{item.budzet} <Show when={item.budzet} fallback={"/"}>{valuta()}</Show></td>
-                                        <td><progress class="progress progress-info w-56" value={item.kolicina} max={item.budzet}></progress></td>
-                                    </tr>
+                                            <td class="flex flex-col items-center"><div style={`background-color: ${item.boja}`} class="p-2 rounded-2xl flex-none">{item.vrsta_troska}</div></td>
+                                            <td>{item.budzet} <Show when={item.budzet} fallback={"/"}>{valuta()}</Show></td>
+                                            <td><progress class="progress progress-info w-56" value={item.kolicina} max={item.budzet}></progress></td>
+                                        </tr>
                                     </Show>
                                 }
                             </For>
