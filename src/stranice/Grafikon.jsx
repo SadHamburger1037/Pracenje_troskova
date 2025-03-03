@@ -6,8 +6,6 @@ import { odabirRaspona, rasponOdabir, rasponDatum, setRasponOdabir, resetRaspon,
 import { valuta } from '../App';
 import { getMonth, getYear } from 'date-fns';
 
-//raspone deti u servise pod odabirRaspoa.js i tak spojit grafiko i prikaz troskova
-
 export default function Grafikon() {
 
     const session = UseAuth()
@@ -46,22 +44,27 @@ export default function Grafikon() {
                 data[i].budzet = data2[0].mjesecni_budzet
             }
 
+            let result = [];
             for (let i = 0; i < data.length; i++) {
-                console.log(data[i]);
-
-            }
-
-            for (let i = 0; i < data.length; i++) {
-                for (let j = i + 1; j < data.length; j++) {
-                    if (data[i].vrsta_troska == data[j].vrsta_troska) {
-                        data[i].kolicina += data[j].kolicina
-                        data.splice(j, 1)
-                    }
+                let vrstaTroskaResult = result.find(el => el.vrsta_troska === data[i].vrsta_troska);
+                if (vrstaTroskaResult) {
+                    vrstaTroskaResult.kolicina += data[i].kolicina;
+                    result = result.filter(el => el.vrsta_troska !== data[i].vrsta_troska);
+                    result.push(vrstaTroskaResult);
+                } else {
+                    vrstaTroskaResult = {
+                        vrsta_troska: data[i].vrsta_troska,
+                        kolicina: data[i].kolicina,
+                        boja: data[i].boja,
+                        budzet: data[i].budzet
+                    };
+                    result.push(vrstaTroskaResult);
                 }
             }
-            setCostData(data)
+
+            setCostData(result)
             if (!budget() || rasponOdabir() == "Mjesec") {
-                setBudget(data)
+                setBudget(result)
                 setBudgetDate(document.getElementById("raspon1").value)
             }
             createChart()

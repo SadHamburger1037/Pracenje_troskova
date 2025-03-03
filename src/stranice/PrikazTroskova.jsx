@@ -144,7 +144,7 @@ export default function PrikazTroskova(props) {
                 </div>
             </Show>
             <Show when={sveukupniTrosak()}>
-                <div role="alert" class="alert alert-info m-auto mt-10 text-3xl flex items-center w-fit">
+                <div role="alert" class="alert alert-info m-auto mt-10 mb-10 text-3xl flex items-center w-fit">
                     <span class="m-auto">Ukupan trošak: {sveukupniTrosak()} {valuta}</span>
                 </div>
             </Show>
